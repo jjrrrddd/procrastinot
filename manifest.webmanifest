@@ -1,0 +1,19 @@
+{
+    "id": "./",
+    "name": "ProcrastiNOT | Student space",
+    "short_name": "ProcrastiNOT",
+    "description": "A calmer way to get started with schoolwork.",
+    "start_url": "./",
+    "scope": "./",
+    "display": "standalone",
+    "background_color": "#fff3d7",
+    "theme_color": "#fff3d7",
+    "icons": [
+        {
+            "src": "assets/app-icon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ]
+}

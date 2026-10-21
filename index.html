@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProcrastiNOT | Student space</title>
+    <meta name="theme-color" content="#fff3d7">
+    <script>
+        window.PROCRASTINOT_GITHUB_PAGES = window.location.hostname.endsWith('.github.io');
+        if (window.PROCRASTINOT_GITHUB_PAGES) {
+            document.documentElement.classList.add('github-pages-demo');
+        }
+    </script>
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="assets/app-icon.svg">
+    <link rel="icon" href="assets/ProcrastiNOT-transparent.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="intro-screen" id="introScreen">
+        <section class="splash" aria-labelledby="welcomeTitle">
+            <span class="intro-pill"><span></span> YOUR PERSONAL STUDY SPACE</span>
+
+            <div class="splash-mark">
+                <img class="splash-logo" src="assets/ProcrastiNOT-transparent.png" alt="ProcrastiNOT logo" role="button" aria-label="Squish the ProcrastiNOT logo" tabindex="0">
+            </div>
+
+            <h1 id="welcomeTitle">Your Future Won’t Wait.<br><span>Neither Should You.</span></h1>
+
+            <form id="loginForm" class="login-form">
+                <label class="login-field" id="displayNameField" for="loginDisplayName">
+                    <span>Your name</span>
+                    <input id="loginDisplayName" type="text" autocomplete="name" maxlength="32" required>
+                </label>
+                <label class="login-field" for="loginEmail">
+                    <span>Email address</span>
+                    <input id="loginEmail" type="email" autocomplete="email" required>
+                </label>
+                <label class="login-field" for="loginPassword">
+                    <span>Password</span>
+                    <input id="loginPassword" type="password" autocomplete="new-password" minlength="8" required>
+                </label>
+                <button id="enterBtn" class="primary-btn" type="submit">Create account <span aria-hidden="true">→</span></button>
+            </form>
+            <p id="authMessage" class="auth-note" role="status" aria-live="polite">Create an account to save your focus and study preferences.</p>
+            <button id="authModeBtn" class="auth-mode-btn" type="button">Already have an account? Sign in</button>
+        </section>
+
+        <p class="welcome-footnote">A calmer way to get started</p>
+    </div>
+
+    <div class="app-shell" id="appShell" inert aria-hidden="true">
+        <header class="site-header">
+            <nav class="navbar" aria-label="Main navigation">
+                <button id="menuBtn" class="menu-btn" type="button" aria-label="Open navigation menu" aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <a class="brand" href="#home" aria-label="Student home">
+                    <img class="brand-logo" src="assets/ProcrastiNOT-transparent.png" alt="" aria-hidden="true">
+                </a>
+            </nav>
+        </header>
+
+        <aside id="sideMenu" class="side-menu" aria-hidden="true">
+            <div class="side-menu-header">
+                <div>
+                    <p class="side-menu-kicker">Navigate</p>
+                    <h2>Menu</h2>
+                </div>
+                <button id="closeMenuBtn" class="close-menu-btn" type="button" aria-label="Close navigation menu">×</button>
+            </div>
+            <div class="menu-account" role="group" aria-label="Signed-in account">
+                <span class="avatar" aria-hidden="true">
+                    <span id="userInitials">S</span>
+                    <img id="navUserAvatar" class="nav-user-avatar" alt="" hidden>
+                </span>
+                <span class="nav-user" id="navUsernameDisplay">Student</span>
+                <button id="logoutBtn" class="logout-btn" type="button">Sign out</button>
+            </div>
+            <nav class="side-menu-nav" aria-label="Side navigation">
+                <a class="side-menu-link active" href="#home">My space</a>
+                <a class="side-menu-link" href="#taskLists">Task list</a>
+                <a class="side-menu-link" href="#focusTools">Focus timer</a>
+                <a class="side-menu-link" href="#rewards">Your journey</a>
+                <a class="side-menu-link" href="#studyBuddies">Study buddies</a>
+                <a class="side-menu-link" href="#calendar">Calendar</a>
+                <a class="side-menu-link" href="#studyTips">Tips & support</a>
+                <a class="side-menu-link" href="#preferences">Preferences</a>
+            </nav>
+            <button id="settingsBtn" class="credit-btn" type="button" aria-label="Open settings">Settings</button>
+            <button id="creditBtn" class="credit-btn" type="button" aria-label="View credits">Credits</button>
+            <button id="feedbackBtn" class="credit-btn" type="button" aria-label="Send feedback">Feedback</button>
+        </aside>
+
+        <aside id="feedbackPanel" class="settings-panel" aria-hidden="true" aria-label="Feedback panel">
+            <div class="side-menu-header">
+                <div class="credits-heading">
+                    <p class="side-menu-kicker">Help us improve</p>
+                    <div class="credits-title-row">
+                        <h2>Send feedback</h2>
+                        <span class="credits-team-title">Tell us what you think</span>
+                    </div>
+                </div>
+                <button id="closeFeedbackBtn" class="close-menu-btn" type="button" aria-label="Close feedback">×</button>
+            </div>
+            <div class="settings-content">
+                <form id="feedbackForm" class="feedback-form">
+                    <p class="feedback-delivery-notice">Your feedback will be stored securely for the team to review in Supabase. Email notifications are not enabled.</p>
+                    <label class="settings-field" for="feedbackType">
+                        <span>What is this about?</span>
+                        <select id="feedbackType" class="feedback-select">
+                            <option value="bug">Bug report</option>
+                            <option value="feature">Feature request</option>
+                            <option value="praise">Something you love</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </label>
+                    <label class="settings-field" for="feedbackMessage">
+                        <span>Your message</span>
+                        <textarea id="feedbackMessage" rows="4" placeholder="What should we know?" maxlength="500" required></textarea>
+                    </label>
+                    <p id="feedbackStatus" class="settings-status" role="status" aria-live="polite"></p>
+                    <div class="feedback-submit-row">
+                        <button id="feedbackSubmitBtn" class="primary-btn" type="submit">Send feedback <span aria-hidden="true">✈</span></button>
+                        <button id="feedbackDoodleBtn" class="feedback-doodle" type="button" aria-label="Tap the bear three times for a surprise">
+                            <img class="bear-doodle-img" src="assets/bear-doodle.png" alt="" aria-hidden="true">
+                        </button>
+                    </div>
+                    <span id="feedbackDoodleStatus" class="visually-hidden" role="status" aria-live="polite"></span>
+                </form>
+            </div>
+            <button id="backToMenuFromFeedbackBtn" class="back-menu-btn" type="button">Back to menu</button>
+        </aside>
+
+        <aside id="settingsPanel" class="settings-panel" aria-hidden="true" aria-label="Settings panel">
+            <div class="side-menu-header">
+                <div class="credits-heading">
+                    <p class="side-menu-kicker">Preferences</p>
+                    <div class="credits-title-row">
+                        <h2>Settings</h2>
+                        <span class="credits-team-title">Tune your study space</span>
+                    </div>
+                </div>
+                <button id="closeSettingsBtn" class="close-menu-btn" type="button" aria-label="Close settings">×</button>
+            </div>
+            <div class="settings-content">
+                <section class="settings-group">
+                    <h3>Focus timer</h3>
+                    <label class="settings-field" for="settingsDefaultTimer">
+                        <span>Default session length</span>
+                        <input id="settingsDefaultTimer" type="number" min="1" max="120" value="25">
+                        <span class="settings-unit">minutes</span>
+                    </label>
+                </section>
+                <section class="settings-group">
+                    <h3>Screen break reminder</h3>
+                    <label class="settings-field" for="settingsScreenBreak">
+                        <span>Remind me after</span>
+                        <input id="settingsScreenBreak" type="number" min="1" max="120" value="5">
+                        <span class="settings-unit">minutes on this site</span>
+                    </label>
+                </section>
+                <section class="settings-group">
+                    <h3>Focus timer alarm</h3>
+                    <label class="settings-field" for="settingsChimeDuration">
+                        <span>Chime duration</span>
+                        <select id="settingsChimeDuration">
+                            <option value="0">Silent</option>
+                            <option value="3">3 seconds</option>
+                            <option value="5" selected>5 seconds</option>
+                            <option value="10">10 seconds</option>
+                        </select>
+                    </label>
+                    <p class="settings-hint">Choose how long the gentle chime repeats when your focus timer finishes.</p>
+                </section>
+                <section class="settings-group profile-avatar-settings">
+                    <h3>Profile picture</h3>
+                    <div class="profile-avatar-preview-wrap">
+                        <span id="profileAvatarFallback" class="profile-avatar-fallback" aria-label="No profile picture uploaded">?</span>
+                        <img id="profileAvatarPreview" class="profile-avatar-preview" alt="Your profile picture" hidden>
+                    </div>
+                    <label class="profile-avatar-file-label" for="profileAvatarInput">
+                        <span>Choose a JPG, PNG, or WebP image (up to 5 MB)</span>
+                        <input id="profileAvatarInput" type="file" accept="image/jpeg,image/png,image/webp">
+                    </label>
+                    <div class="profile-avatar-actions">
+                        <button id="saveProfileAvatarBtn" class="timer-secondary-btn" type="button" disabled>Upload picture</button>
+                        <button id="removeProfileAvatarBtn" class="timer-secondary-btn" type="button" disabled>Remove picture</button>
+                    </div>
+                    <p class="settings-hint">Your picture is visible to people in a pending buddy request with you and your accepted buddies.</p>
+                    <p id="profileAvatarStatus" class="settings-status" role="status" aria-live="polite"></p>
+                </section>
+                <p id="settingsSaveStatus" class="settings-status" role="status" aria-live="polite"></p>
+                <section class="settings-group">
+                    <h3>Notifications</h3>
+                    <button id="settingsNotifyBtn" class="timer-secondary-btn" type="button">Enable notifications</button>
+                    <label class="settings-checkbox-label" for="settingsDeadlineReminders">
+                        <input id="settingsDeadlineReminders" type="checkbox">
+                        <span>Gentle task deadline reminders</span>
+                    </label>
+                    <p class="settings-hint">Get one desktop heads-up the day before a task is due. Reminders are checked while you are signed in and the app is open; overdue tasks do not trigger alerts.</p>
+                    <p id="settingsNotifyStatus" class="settings-status" role="status" aria-live="polite"></p>
+                </section>
+                <section class="settings-group">
+                    <h3>Study preferences</h3>
+                    <p class="settings-hint">Favorite subject and study pace are saved to your account on the Preferences page.</p>
+                    <button id="settingsGoPreferencesBtn" class="timer-secondary-btn" type="button">Open preferences</button>
+                </section>
+                <section class="settings-group">
+                    <h3>Data</h3>
+                    <button id="settingsResetBtn" class="timer-secondary-btn" type="button">Reset local data</button>
+                    <p id="settingsResetStatus" class="settings-status" role="status" aria-live="polite"></p>
+                    <p class="settings-hint">Clears tasks, game progress, site usage, and settings stored in this browser. Your account and profile stay intact.</p>
+                </section>
+            </div>
+            <button id="backToMenuFromSettingsBtn" class="back-menu-btn" type="button">Back to menu</button>
+        </aside>
+
+        <aside id="creditsPanel" class="credits-panel" aria-hidden="true" aria-label="Credits panel">
+            <div class="side-menu-header">
+                <div class="credits-heading">
+                    <p class="side-menu-kicker">About</p>
+                    <div class="credits-title-row">
+                        <h2>Credits</h2>
+                        <span class="credits-team-title">Meet the Researcher team</span>
+                    </div>
+                </div>
+                <button id="closeCreditsBtn" class="close-menu-btn" type="button" aria-label="Close credits panel">×</button>
+            </div>
+            <div class="credits-content">
+                <div class="credits-members" role="group" aria-label="Project members">
+                    <button class="credit-member-btn" type="button" data-name="Reese Nicole" data-photo="reesenicole.png" data-description="Reese Nicole is the leader of the Researcher team." aria-pressed="false">Reese Nicole</button>
+                    <button class="credit-member-btn" type="button" data-name="Aivan Fortus" data-photo="aivan.png" aria-pressed="false">Aivan Fortus</button>
+                    <button class="credit-member-btn" type="button" data-name="Dave Mendoza" data-photo="davemendoza.png" aria-pressed="false">Dave Mendoza</button>
+                    <button class="credit-member-btn" type="button" data-name="John Lloyd" data-photo="Johnlloyd.png" aria-pressed="false">John Lloyd</button>
+                    <button class="credit-member-btn" type="button" data-name="John Mark" data-photo="johnmark.png" aria-pressed="false">John Mark</button>
+                    <button class="credit-member-btn" type="button" data-name="Harold Maben" data-photo="haroldmaben.png" aria-pressed="false">Harold Maben</button>
+                    <button class="credit-member-btn" type="button" data-name="D'Anna" data-photo="danna.png" aria-pressed="false">D'Anna</button>
+                    <button class="credit-member-btn" type="button" data-name="Angelo Viceral" data-photo="angeloviceral.png" aria-pressed="false">Angelo Viceral</button>
+                    <button class="credit-member-btn" type="button" data-name="Lantis Saddi" data-photo="Lantis Saddi.png" data-photo-alt="Portrait of Lantis Saddi" aria-pressed="false">Lantis Saddi</button>
+                    <button class="credit-member-btn" type="button" data-name="Jeremy Abanlog" data-photo="jeremy-abanlog.png" data-photo-alt="Portrait of Jeremy Abanlog with the background removed" aria-pressed="false">Jeremy Abanlog</button>
+                </div>
+                <section class="credit-detail" id="creditDetail" aria-live="polite" aria-atomic="true">
+                    <div class="credit-photo-placeholder">
+                        <img id="creditPhoto" alt="Select a team member to view their photo">
+                    </div>
+                    <div class="credit-detail-info">
+                        <h3 id="creditDetailTitle">Meet the Researcher team</h3>
+                        <p id="creditDetailText">Choose a team member above to see their photo.</p>
+                    </div>
+                </section>
+                <section class="credits-affiliation" aria-labelledby="creditsAffiliationTitle">
+                    <img class="credits-school-logo" src="assets/School-logo.png" alt="Taysan High School and Child Development Center school logo">
+                    <div class="credits-affiliation-copy">
+                        <p class="credits-affiliation-kicker">MADE FOR PRACTICAL RESEARCH</p>
+                        <h3 id="creditsAffiliationTitle">Taysan High School and Child Development Center</h3>
+                        <p>ProcrastiNOT was created as a Practical Research project to explore how a supportive study tool can help students manage procrastination and get started on schoolwork.</p>
+                    </div>
+                    <img class="credits-group-photo" src="assets/researcher group photo.jpg" alt="The Researcher team at Taysan High School and Child Development Center">
+                </section>
+            </div>
+            <button id="backToMenuBtn" class="back-menu-btn" type="button">Back to menu</button>
+        </aside>
+
+        <main class="dashboard" id="home">
+            <aside id="localDemoNotice" class="local-demo-notice" role="status" hidden>
+                GitHub Pages demo: your tasks and preferences stay in this browser. Sign-in, buddy features, and online feedback are disabled here.
+            </aside>
+            <section class="dashboard-heading" data-app-page="home">
+                <div class="dashboard-heading-copy">
+                    <p id="timeGreeting" class="eyebrow">Good morning</p>
+                    <h1>Good to see you, <span id="usernameDisplay">Student</span>.</h1>
+                    <p class="heading-subtitle">Your space, your pace. What would you like to focus on?</p>
+                </div>
+                <div class="date-card">
+                    <span class="date-icon" aria-hidden="true">✳</span>
+                    <span id="todayDate">A fresh start</span>
+                </div>
+            </section>
+
+            <section class="dashboard-grid" aria-label="Your student dashboard" data-app-page="home">
+                <div class="main-column">
+                    <article class="focus-card">
+                        <div class="focus-card-header">
+                            <div class="focus-card-brand">
+                                <span class="section-kicker">Your next step</span>
+                                <h2>What's your focus today?</h2>
+                            </div>
+                            <span class="focus-icon" aria-hidden="true">✦</span>
+                        </div>
+                        <p class="card-copy">Start with one thing. Big or small, just pick one.</p>
+                        <form id="taskForm" class="task-form">
+                            <div class="task-input-wrap">
+                                <label class="visually-hidden" for="taskInput">What are you working on?</label>
+                                <input id="taskInput" type="text" placeholder="e.g. Review my science notes" maxlength="60">
+                            </div>
+                            <button id="startTaskBtn" class="primary-btn" type="submit">Save focus <span aria-hidden="true">→</span></button>
+                        </form>
+                        <p id="taskFeedback" class="task-feedback" aria-live="polite"></p>
+                        <aside id="taskDueReminder" class="task-due-reminder" aria-live="polite" hidden>
+                            <p id="taskDueReminderText"></p>
+                            <button id="taskDueReminderButton" class="timer-secondary-btn" type="button">Tiny first step</button>
+                        </aside>
+                        <aside id="savedFocusNote" class="saved-focus-note" aria-live="polite" hidden>
+                            <span class="saved-focus-label"><span aria-hidden="true">✦</span> Current focus</span>
+                            <p id="savedFocusText"></p>
+                            <span class="saved-focus-footer">One step at a time.</span>
+                        </aside>
+                    </article>
+
+                </div>
+
+                <aside class="side-column">
+                    <article class="today-card">
+                        <div class="today-card-top">
+                            <span class="section-kicker">QUOTE OF THE DAY</span>
+                            <span class="sun-icon" aria-hidden="true">☀</span>
+                        </div>
+                        <blockquote class="reminder-quote" id="reminderQuote" aria-live="polite"></blockquote>
+                        <footer class="reminder-credit">
+                            <strong id="reminderAuthor"></strong>
+                            <a id="reminderAbout" href="https://quoteslate.vercel.app/" target="_blank" rel="noopener noreferrer">Motivational quote via QuoteSlate</a>
+                            <span id="quoteStatus" class="quote-status" role="status" aria-live="polite">Loading today’s quote…</span>
+                        </footer>
+                        <div class="reminder-decoration" aria-hidden="true">✳</div>
+                    </article>
+
+                </aside>
+            </section>
+            <section class="install-guide" data-app-page="home" aria-labelledby="installGuideTitle">
+                <div class="install-guide-heading">
+                    <span class="section-kicker">TAKE IT WITH YOU</span>
+                    <h2 id="installGuideTitle">Install ProcrastiNOT on your phone</h2>
+                    <p>Open the HTTPS version of this site in your phone’s browser to add it to your home screen.</p>
+                </div>
+                <details class="install-guide-details">
+                    <summary>Show phone installation steps</summary>
+                    <div class="install-guide-steps">
+                        <section>
+                            <h3>iPhone or iPad</h3>
+                            <ol>
+                                <li>Open this site in Safari.</li>
+                                <li>Tap <strong>Share</strong>, then <strong>Add to Home Screen</strong>.</li>
+                                <li>Tap <strong>Add</strong> to finish.</li>
+                            </ol>
+                        </section>
+                        <section>
+                            <h3>Android</h3>
+                            <ol>
+                                <li>Open this site in Chrome.</li>
+                                <li>Tap the menu, then <strong>Install app</strong> or <strong>Add to Home screen</strong>.</li>
+                                <li>Confirm the installation.</li>
+                            </ol>
+                        </section>
+                    </div>
+                </details>
+            </section>
+            <section class="task-list-card" id="taskLists" aria-labelledby="taskListsTitle" data-app-page="taskLists" hidden>
+                <div class="section-title-row">
+                    <div>
+                        <span class="section-kicker">KEEP IT MOVING</span>
+                        <h2 id="taskListsTitle">My task list</h2>
+                    </div>
+                    <span class="preferences-icon" aria-hidden="true">✓</span>
+                </div>
+                <p class="card-copy">Break your day into small, manageable steps.</p>
+                <label class="task-due-field" for="taskDueDate">
+                    <span>Due date</span>
+                    <input id="taskDueDate" type="date" required>
+                </label>
+                <form id="taskListForm" class="task-list-form">
+                    <label class="visually-hidden" for="taskListInput">Add a task</label>
+                    <input id="taskListInput" type="text" placeholder="Add a task..." maxlength="100" required>
+                    <label class="visually-hidden" for="taskDifficulty">Task size</label>
+                    <select id="taskDifficulty" aria-label="Task size">
+                        <option value="small">Small · 5 points</option>
+                        <option value="medium" selected>Medium · 10 points</option>
+                        <option value="large">Large · 20 points</option>
+                    </select>
+                    <button class="primary-btn" type="submit">Add task <span aria-hidden="true">+</span></button>
+                </form>
+                <p id="taskListMessage" class="task-list-message" aria-live="polite"></p>
+                <ul id="taskListItems" class="task-list-items" aria-label="Your tasks"></ul>
+                <p class="task-list-note">Your task list is saved in this browser for this account. It stays private unless you choose to share it with a buddy.</p>
+            </section>
+            <dialog id="tinyStepsDialog" class="tiny-steps-dialog" aria-labelledby="tinyStepsTitle">
+                <div class="tiny-steps-header">
+                    <div>
+                        <span class="section-kicker">START SMALL</span>
+                        <h2 id="tinyStepsTitle">Tiny first step</h2>
+                    </div>
+                    <button id="closeTinyStepsBtn" class="close-menu-btn" type="button" aria-label="Close tiny-step guide">×</button>
+                </div>
+                <p id="tinyStepsTask" class="tiny-steps-task"></p>
+                <aside id="tinyStepsSubjectBridge" class="tiny-steps-subject-bridge" aria-live="polite" hidden>
+                    <strong id="tinyStepsSubjectBridgeTitle"></strong>
+                    <p id="tinyStepsSubjectBridgeText"></p>
+                </aside>
+                <p class="tiny-steps-prompt">What is making this task feel hard?</p>
+                <div id="tinyStepReasons" class="tiny-step-reasons" role="group" aria-label="Choose what is making the task hard"></div>
+                <p id="tinyStepEncouragement" class="tiny-step-encouragement" aria-live="polite" hidden></p>
+                <ol id="tinyStepList" class="tiny-step-list"></ol>
+                <p id="tinyStepStatus" class="tiny-step-status" role="status" aria-live="polite"></p>
+                <div class="tiny-steps-actions">
+                    <button id="startTinyTimerBtn" class="primary-btn" type="button">Start 5 minutes</button>
+                    <button id="dismissTinyStepsBtn" class="timer-secondary-btn" type="button">Close</button>
+                </div>
+            </dialog>
+            <article class="focus-timer-card" id="focusTools" aria-labelledby="focusTimerTitle" data-app-page="focusTools" hidden>
+                <div class="section-title-row">
+                    <div>
+                        <span class="section-kicker">FOCUS TOOLS</span>
+                        <h2 id="focusTimerTitle">Focus timer</h2>
+                    </div>
+                    <span class="focus-icon" aria-hidden="true">◷</span>
+                </div>
+                <p class="card-copy">Set a timer for one focused study session.</p>
+                <label class="timer-duration-label" for="timerMinutes">Session length</label>
+                <div class="timer-display" id="focusTimerDisplay" role="timer" aria-live="off">25:00</div>
+                <p id="focusTimerMessage" class="timer-message" aria-live="polite">Ready when you are.</p>
+                <form id="focusTimerForm" class="timer-controls">
+                    <input id="timerMinutes" type="number" min="1" max="120" value="25">
+                    <button id="timerStartBtn" class="primary-btn" type="submit">Start</button>
+                    <button id="timerPauseBtn" class="timer-secondary-btn" type="button" disabled>Pause</button>
+                    <button id="timerResetBtn" class="timer-secondary-btn" type="button">Reset</button>
+                </form>
+                <div class="screen-limit-note">
+                    <span aria-hidden="true">☼</span>
+                    <p>Screen break reminder after <strong id="screenBreakReminderValue">5 minutes</strong> on this site. It can’t limit other apps or your whole device.</p>
+                </div>
+                <p id="screenLimitMessage" class="screen-limit-message" aria-live="polite"></p>
+                <button id="dismissScreenLimitBtn" class="timer-secondary-btn screen-limit-dismiss" type="button" hidden>Dismiss reminder</button>
+            </article>
+            <section class="rewards-card" id="rewards" aria-labelledby="rewardsTitle" data-app-page="rewards" hidden>
+                <div class="section-title-row">
+                    <div>
+                        <span class="section-kicker">YOUR PROGRESS</span>
+                        <h2 id="rewardsTitle">Your journey</h2>
+                    </div>
+                </div>
+                <div class="progress-stats" aria-live="polite">
+                    <article class="progress-stat">
+                        <span class="progress-stat-icon" aria-hidden="true">✦</span>
+                        <span class="progress-stat-label">Points</span>
+                        <strong id="pointsBalance">0</strong>
+                    </article>
+                    <article class="progress-stat">
+                        <span class="progress-stat-icon" aria-hidden="true">↗</span>
+                        <span class="progress-stat-label">Level</span>
+                        <strong id="levelNumber">1</strong>
+                    </article>
+                    <article class="progress-stat">
+                        <span class="progress-stat-icon" aria-hidden="true">♨</span>
+                        <span class="progress-stat-label">Day streak</span>
+                        <strong><span id="streakCount">0</span> <span id="streakUnit">days</span></strong>
+                    </article>
+                    <article class="progress-stat">
+                        <span class="progress-stat-icon" aria-hidden="true">★</span>
+                        <span class="progress-stat-label">Best streak</span>
+                        <strong><span id="longestStreakCount">0</span> <span id="longestStreakUnit">days</span></strong>
+                    </article>
+                </div>
+                <p class="progress-explainer">Finish each task once to earn 5, 10, or 20 points and XP. Every 100 XP earns a level; finish one task a day to build your streak.</p>
+                <div class="level-progress">
+                    <div class="level-progress-copy">
+                        <span id="xpProgressText">0 / 100 XP to level 2</span>
+                        <span id="totalXpText">0 XP total</span>
+                    </div>
+                    <div class="level-progress-track" id="levelProgressTrack" role="progressbar" aria-label="Progress to next level" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                        <span id="levelProgressBar"></span>
+                    </div>
+                </div>
+                <section class="garden-section" aria-labelledby="gardenTitle">
+                    <div class="garden-heading">
+                        <div>
+                            <span class="section-kicker">GROWN ONE TASK AT A TIME</span>
+                            <h3 id="gardenTitle">Your study garden</h3>
+                        </div>
+                        <span id="gardenFlowerCount" class="garden-flower-count">0 blooms</span>
+                    </div>
+                    <p id="gardenSummary" class="garden-summary">Every task is a seed. Finish one to help your garden bloom.</p>
+                    <div id="taskGarden" class="task-garden" role="img" aria-label="Your study garden"></div>
+                </section>
+                <div class="mascot-section">
+                    <div class="mascot-display">
+                        <div id="mascotFace" class="mascot-bear" role="img" aria-label="Animated bear mascot">
+                            <span id="mascotEvolutionBadge" class="mascot-evolution-badge" aria-hidden="true">🌱</span>
+                            <svg class="bear-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <defs>
+                                    <radialGradient id="furGrad" cx="42%" cy="32%" r="72%">
+                                        <stop offset="0%" stop-color="#d9a66f"/>
+                                        <stop offset="68%" stop-color="#a96f3d"/>
+                                        <stop offset="100%" stop-color="#704522"/>
+                                    </radialGradient>
+                                    <radialGradient id="earGrad" cx="50%" cy="36%" r="75%">
+                                        <stop offset="0%" stop-color="#c78e59"/>
+                                        <stop offset="100%" stop-color="#704522"/>
+                                    </radialGradient>
+                                    <linearGradient id="muzzleGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="#fff2dc"/>
+                                        <stop offset="100%" stop-color="#e9c9a3"/>
+                                    </linearGradient>
+                                </defs>
+
+                                <g class="bear-body">
+                                    <ellipse cx="100" cy="138" rx="57" ry="48" fill="url(#furGrad)"/>
+                                    <ellipse cx="100" cy="145" rx="30" ry="26" fill="#f3d9b8" opacity="0.9"/>
+                                </g>
+
+                                <g class="bear-ear bear-ear-left">
+                                    <circle cx="53" cy="58" r="24" fill="url(#earGrad)"/>
+                                    <circle cx="53" cy="59" r="13" fill="#d9968f"/>
+                                    <circle cx="53" cy="57" r="7" fill="#edb8aa" opacity="0.8"/>
+                                </g>
+                                <g class="bear-ear bear-ear-right">
+                                    <circle cx="147" cy="58" r="24" fill="url(#earGrad)"/>
+                                    <circle cx="147" cy="59" r="13" fill="#d9968f"/>
+                                    <circle cx="147" cy="57" r="7" fill="#edb8aa" opacity="0.8"/>
+                                </g>
+
+                                <g class="bear-head">
+                                    <ellipse cx="100" cy="98" rx="57" ry="53" fill="url(#furGrad)"/>
+                                    <ellipse cx="100" cy="111" rx="34" ry="25" fill="url(#muzzleGrad)"/>
+                                    <ellipse cx="68" cy="108" rx="10" ry="6" fill="#d9968f" opacity="0.72"/>
+                                    <ellipse cx="132" cy="108" rx="10" ry="6" fill="#d9968f" opacity="0.72"/>
+
+                                    <ellipse class="bear-eye-left" cx="76" cy="86" rx="7" ry="9" fill="#382315"/>
+                                    <ellipse class="bear-eye-right" cx="124" cy="86" rx="7" ry="9" fill="#382315"/>
+                                    <circle cx="74" cy="83" r="2.5" fill="#fff7e9"/>
+                                    <circle cx="122" cy="83" r="2.5" fill="#fff7e9"/>
+                                    <circle class="bear-pupil-left" cx="77" cy="88" r="1.8" fill="#17100a"/>
+                                    <circle class="bear-pupil-right" cx="125" cy="88" r="1.8" fill="#17100a"/>
+
+                                    <path d="M91 108 Q100 101 109 108 Q108 116 100 116 Q92 116 91 108Z" fill="#493022"/>
+                                    <path d="M100 115 Q100 124 92 124 M100 115 Q100 124 108 124" fill="none" stroke="#493022" stroke-width="2.6" stroke-linecap="round"/>
+                                    <path d="M94 132 Q100 137 106 132" fill="none" stroke="#c97970" stroke-width="2" stroke-linecap="round"/>
+                                </g>
+
+                                <g class="bear-arm bear-arm-left">
+                                    <ellipse cx="48" cy="137" rx="17" ry="23" fill="url(#furGrad)"/>
+                                    <ellipse cx="50" cy="146" rx="7" ry="5" fill="#f0cfa9" opacity="0.9"/>
+                                </g>
+                                <g class="bear-arm bear-arm-right">
+                                    <ellipse cx="152" cy="137" rx="17" ry="23" fill="url(#furGrad)"/>
+                                    <ellipse cx="150" cy="146" rx="7" ry="5" fill="#f0cfa9" opacity="0.9"/>
+                                </g>
+
+                                <g class="bear-foot bear-foot-left">
+                                    <ellipse cx="75" cy="177" rx="21" ry="12" fill="#704522"/>
+                                    <ellipse cx="75" cy="176" rx="9" ry="5" fill="#d9968f"/>
+                                </g>
+                                <g class="bear-foot bear-foot-right">
+                                    <ellipse cx="125" cy="177" rx="21" ry="12" fill="#704522"/>
+                                    <ellipse cx="125" cy="176" rx="9" ry="5" fill="#d9968f"/>
+                                </g>
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="section-kicker">YOUR MASCOT</span>
+                            <h3 id="mascotStageTitle">Seedling Bear</h3>
+                            <p id="mascotStageText">Your study companion is growing with you.</p>
+                        </div>
+                    </div>
+                    <p id="mascotMessage" class="task-list-message" aria-live="polite"></p>
+                </div>
+            </section>
+            <section class="buddy-card" id="studyBuddies" aria-labelledby="buddyTitle" data-app-page="studyBuddies" hidden>
+                <div class="section-title-row">
+                    <div>
+                        <span class="section-kicker">STUDY TOGETHER</span>
+                        <h2 id="buddyTitle">Study buddies</h2>
+                    </div>
+                    <button id="refreshBuddiesBtn" class="timer-secondary-btn" type="button">Refresh</button>
+                </div>
+                <p class="buddy-intro">Connect with friends, choose what each buddy can see, and encourage one another with direct or group chats. Your display name identifies your buddy connection; profile progress, favorite subject, task details, and garden sharing are controlled separately per buddy. Email addresses are never shared.</p>
+                <div class="buddy-code-row">
+                    <div>
+                        <span class="buddy-field-label">Your friend code</span>
+                        <strong id="myFriendCode">Loading…</strong>
+                    </div>
+                    <button id="copyFriendCodeBtn" class="timer-secondary-btn" type="button" disabled>Copy code</button>
+                </div>
+                <form id="addBuddyForm" class="add-buddy-form">
+                    <label for="buddyCodeInput">Friend’s code</label>
+                    <div class="buddy-code-input-row">
+                        <input id="buddyCodeInput" type="text" maxlength="16" placeholder="Enter their code" autocomplete="off" required>
+                        <button class="primary-btn" type="submit" disabled>Send request</button>
+                    </div>
+                    <p id="buddyCodePreview" class="buddy-code-preview" aria-live="polite"></p>
+                </form>
+                <p id="buddyMessage" class="buddy-message" aria-live="polite">Loading study buddies…</p>
+                <div class="buddy-lists">
+                    <section aria-labelledby="incomingBuddiesTitle">
+                        <h3 id="incomingBuddiesTitle">Requests for you</h3>
+                        <ul id="incomingBuddyRequests" class="buddy-list"></ul>
+                    </section>
+                    <section aria-labelledby="outgoingBuddiesTitle">
+                        <h3 id="outgoingBuddiesTitle">Sent requests</h3>
+                        <ul id="outgoingBuddyRequests" class="buddy-list"></ul>
+                    </section>
+                    <section aria-labelledby="myBuddiesTitle">
+                        <h3 id="myBuddiesTitle">Your buddies</h3>
+                        <ul id="myBuddyList" class="buddy-list"></ul>
+                    </section>
+                </div>
+                <section class="buddy-content-section" aria-labelledby="buddyContentHeading">
+                    <h3 id="buddyContentHeading">Buddy profile, tasks &amp; garden</h3>
+                    <p class="buddy-feature-hint">Display names identify buddy connections. Profile progress, favorite subject, tasks, and garden progress stay private unless you enable sharing for that buddy.</p>
+                    <div id="buddyContentPanel" class="buddy-content-panel" hidden>
+                        <h4 id="buddyContentTitle"></h4>
+                        <div id="buddyContentBody"></div>
+                    </div>
+                </section>
+                <section class="buddy-chat-section" aria-labelledby="buddyChatHeading">
+                    <div class="section-title-row">
+                        <div>
+                            <h3 id="buddyChatHeading">Buddy chat</h3>
+                            <p class="buddy-feature-hint">Messages are visible only to chat members who are still accepted buddies.</p>
+                        </div>
+                    </div>
+                    <div class="buddy-chat-layout">
+                        <div>
+                            <h4>Your chats</h4>
+                            <ul id="buddyChatList" class="buddy-chat-list"></ul>
+                        </div>
+                        <div id="buddyChatPanel" class="buddy-chat-panel" hidden>
+                            <button id="buddyChatProfileBtn" class="buddy-chat-profile-btn" type="button" aria-haspopup="dialog">
+                                <strong id="buddyChatTitle"></strong>
+                                <span>View profile &amp; options</span>
+                            </button>
+                            <ol id="buddyChatMessages" class="buddy-chat-messages" aria-live="polite"></ol>
+                            <form id="buddyChatForm" class="buddy-chat-form">
+                                <label class="visually-hidden" for="buddyChatInput">Write a message</label>
+                                <textarea id="buddyChatInput" maxlength="2000" rows="3" placeholder="Write a message…" required></textarea>
+                                <button id="sendBuddyChatBtn" class="primary-btn" type="submit">Send</button>
+                            </form>
+                        </div>
+                    </div>
+                    <p id="buddyChatStatus" class="buddy-message" aria-live="polite"></p>
+                </section>
+            </section>
+            <dialog id="buddyChatProfileDialog" class="buddy-feature-dialog" aria-labelledby="buddyChatProfileDialogTitle">
+                <div class="tiny-steps-header">
+                    <div>
+                        <span class="section-kicker">STUDY BUDDY</span>
+                        <h2 id="buddyChatProfileDialogTitle">Buddy profile</h2>
+                    </div>
+                    <button id="closeBuddyChatProfileBtn" class="close-menu-btn" type="button" aria-label="Close buddy profile">×</button>
+                </div>
+                <div id="buddyChatProfileBody" class="buddy-profile-dialog-body"></div>
+                <div class="buddy-profile-dialog-actions">
+                    <button id="openBuddyGroupDialogBtn" class="timer-secondary-btn" type="button">Make a group chat</button>
+                    <button id="closeBuddyChatProfileActionBtn" class="timer-secondary-btn" type="button">Close</button>
+                </div>
+            </dialog>
+            <dialog id="createBuddyGroupDialog" class="buddy-feature-dialog" aria-labelledby="createBuddyGroupTitle">
+                <div class="tiny-steps-header">
+                    <div>
+                        <span class="section-kicker">STUDY TOGETHER</span>
+                        <h2 id="createBuddyGroupTitle">Make a group chat</h2>
+                    </div>
+                    <button id="closeBuddyGroupDialogBtn" class="close-menu-btn" type="button" aria-label="Close group chat form">×</button>
+                </div>
+                <p id="buddyGroupBaseMember" class="buddy-feature-hint"></p>
+                <form id="createBuddyGroupForm" class="buddy-group-form">
+                    <label for="buddyGroupName">Group name</label>
+                    <input id="buddyGroupName" type="text" maxlength="60" placeholder="Study group" required>
+                    <fieldset>
+                        <legend>Add other study buddies</legend>
+                        <div id="groupBuddyMembers" class="buddy-group-members"></div>
+                    </fieldset>
+                    <p id="buddyGroupStatus" class="buddy-feature-hint" aria-live="polite">Choose at least one buddy to add.</p>
+                    <button id="createBuddyGroupBtn" class="primary-btn" type="submit" disabled>Create group</button>
+                </form>
+            </dialog>
+            <section class="study-tips-page" id="studyTips" data-app-page="studyTips" aria-labelledby="studyTipsTitle" hidden>
+                <div class="section-title-row">
+                    <div>
+                        <span class="section-kicker">GENTLE SUPPORT</span>
+                        <h2 id="studyTipsTitle">Tips from students</h2>
+                    </div>
+                    <span class="preferences-icon" aria-hidden="true">✦</span>
+                </div>
+                <p class="card-copy">Small, practical ways to make starting feel easier.</p>
+                <div class="study-tips-list">
+                    <article class="study-tip-item"><span aria-hidden="true">◷</span><div><h3>Try five minutes</h3><p>Start with a short session. You can decide what comes next after you begin.</p></div></article>
+                    <article class="study-tip-item"><span aria-hidden="true">▤</span><div><h3>Break it into small parts</h3><p>Turn a large assignment into a few steps you can do one at a time.</p></div></article>
+                    <article class="study-tip-item"><span aria-hidden="true">⌁</span><div><h3>Make distractions harder</h3><p>Silence your phone and move it out of reach while you work.</p></div></article>
+                    <article class="study-tip-item"><span aria-hidden="true">↻</span><div><h3>Shrink a plan that slipped</h3><p>Choose a smaller next step and make a fresh start without aiming for perfect.</p></div></article>
+                    <article class="study-tip-item"><span aria-hidden="true">♡</span><div><h3>Ask for help early</h3><p>A friend, family member, or teacher can help you get unstuck.</p></div></article>
+                </div>
+                <aside class="study-nudge-panel">
+                    <div>
+                        <h3>Invite someone to study</h3>
+                        <p>Copy a friendly, no-pressure message to share privately.</p>
+                    </div>
+                    <button id="copyStudyNudgeBtn" class="timer-secondary-btn" type="button">Copy study nudge</button>
+                    <p id="studyNudgeStatus" class="study-nudge-status" role="status" aria-live="polite"></p>
+                </aside>
+            </section>
+            <section class="preferences-card" id="preferences" data-app-page="preferences" aria-labelledby="preferencesTitle" hidden>
+                <div class="section-title-row">
+                    <div>
+                        <span class="section-kicker">YOUR STUDY STYLE</span>
+                        <h2 id="preferencesTitle">Study preferences</h2>
+                    </div>
+                    <span class="preferences-icon" aria-hidden="true">☼</span>
+                </div>
+                <p class="card-copy">Choose your favorite subject and study pace. Add your own subject to make it a selectable favorite, and your choices will be saved to your account.</p>
+                <div class="preference-row">
+                    <div class="preference-icon subject-icon" aria-hidden="true">✎</div>
+                    <div class="preference-copy">
+                        <strong>Favorite subject</strong>
+                        <span>Pick what you're into lately</span>
+                        <span id="favoriteSubjectStatus" class="preference-save-status" role="status" aria-live="polite">Choose a subject to set your favorite.</span>
+                    </div>
+                    <div id="subjectSelect" class="subject-btn-group" role="radiogroup" aria-label="Favorite subject">
+                        <button type="button" class="subject-btn" data-subject="Science" aria-pressed="false">Science</button>
+                        <button type="button" class="subject-btn" data-subject="Mathematics" aria-pressed="false">Mathematics</button>
+                        <button type="button" class="subject-btn" data-subject="English" aria-pressed="false">English</button>
+                        <button type="button" class="subject-btn" data-subject="Araling Panlipunan" aria-pressed="false">Araling Panlipunan</button>
+                    </div>
+                    <div class="custom-subject-box">
+                        <input id="customSubjectInput" type="text" placeholder="Your own subject…" maxlength="24" aria-label="Custom favorite subject">
+                        <button id="addCustomSubjectBtn" class="add-subject-btn" type="button" disabled>Add</button>
+                    </div>
+                </div>
+                <div class="preference-row">
+                    <div class="preference-icon pace-icon" aria-hidden="true">◷</div>
+                    <div class="preference-copy">
+                        <strong>Study pace</strong>
+                        <span>There's no rush — choose your rhythm</span>
+                    </div>
+                    <label class="visually-hidden" for="paceSelect">Study pace</label>
+                    <div id="paceSelect" class="pace-btn-group" role="radiogroup" aria-label="Study pace">
+                        <button type="button" class="pace-btn" data-pace="My own pace" aria-pressed="false">My own pace</button>
+                        <button type="button" class="pace-btn" data-pace="Quick sessions" aria-pressed="false">Quick sessions</button>
+                        <button type="button" class="pace-btn" data-pace="Deep focus" aria-pressed="false">Deep focus</button>
+                    </div>
+                </div>
+                <p class="storage-note"><span aria-hidden="true">ⓘ</span> Your work and preferences are saved to your account.</p>
+            </section>
+            <section class="calendar-card" id="calendar" data-app-page="calendar" hidden>
+                <div class="section-title-row">
+                    <div>
+                        <span class="section-kicker">YOUR DAY</span>
+                        <h2 id="calendarTitle">Calendar</h2>
+                    </div>
+                    <div class="calendar-nav">
+                        <button id="calendarPrevBtn" class="timer-secondary-btn" type="button" aria-label="Previous month">‹</button>
+                        <span id="calendarMonthLabel" class="calendar-month-label"></span>
+                        <button id="calendarNextBtn" class="timer-secondary-btn" type="button" aria-label="Next month">›</button>
+                    </div>
+                </div>
+                <p class="card-copy">Tap a date to add a reminder. Pick a color to mark what matters most. Your notes stay in this browser for this account.</p>
+                <div class="calendar-layout">
+                    <div class="calendar-weekdays">
+                        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                    </div>
+                    <div id="calendarGrid" class="calendar-grid" role="grid"></div>
+                </div>
+                <form id="calendarReminderForm" class="calendar-reminder-form">
+                    <input id="calendarReminderDate" type="text" placeholder="Selected date (e.g. 2026-10-17)" readonly>
+                    <input id="calendarReminderText" type="text" placeholder="Reminder…" maxlength="100" required>
+                    <label class="calendar-time-field" for="calendarReminderTime">
+                        <span>Alarm time</span>
+                        <input id="calendarReminderTime" type="time" step="60" aria-label="Alarm time (optional)">
+                    </label>
+                    <div id="calendarReminderColors" class="calendar-reminder-colors" role="radiogroup" aria-label="Reminder importance">
+                        <button type="button" class="calendar-color-btn" data-color="red" style="--color:#9b3e31" aria-pressed="true" title="Important / urgent"></button>
+                        <button type="button" class="calendar-color-btn" data-color="amber" style="--color:#b9770e" aria-pressed="false" title="Moderate"></button>
+                        <button type="button" class="calendar-color-btn" data-color="green" style="--color:#5a8f3b" aria-pressed="false" title="Low priority"></button>
+                        <button type="button" class="calendar-color-btn" data-color="blue" style="--color:#3a6ea5" aria-pressed="false" title="Info / note"></button>
+                    </div>
+                    <button class="primary-btn" type="submit">Add reminder <span aria-hidden="true">+</span></button>
+                </form>
+                <p id="calendarMessage" class="calendar-message" aria-live="polite"></p>
+                <div class="calendar-legend">
+                    <span class="calendar-legend-item"><i class="calendar-legend-dot" style="--reminder-color:#9b3e31"></i> Important / urgent</span>
+                    <span class="calendar-legend-item"><i class="calendar-legend-dot" style="--reminder-color:#b9770e"></i> Moderate</span>
+                    <span class="calendar-legend-item"><i class="calendar-legend-dot" style="--reminder-color:#5a8f3b"></i> Low priority</span>
+                    <span class="calendar-legend-item"><i class="calendar-legend-dot" style="--reminder-color:#3a6ea5"></i> Info / note</span>
+                </div>
+                <ul id="calendarReminderList" class="calendar-reminder-list"></ul>
+            </section>
+            <footer class="dashboard-footer">Profile and buddy progress saved to your account; tasks and timer settings are saved in this browser</footer>
+        </main>
+    </div>
+
+    <aside id="studyCompanion" class="study-companion" aria-label="Study encouragement" hidden>
+        <div class="study-companion-bubble-wrap">
+            <button id="studyCompanionMessage" class="study-companion-message" type="button" aria-live="polite">One small step is enough to begin.</button>
+            <button id="closeStudyCompanionBtn" class="study-companion-close" type="button" aria-label="Dismiss study encouragement">×</button>
+        </div>
+        <img class="study-companion-image" src="monika%20sprites/Mon1.webp" alt="Monika from Doki Doki Literature Club">
+    </aside>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="script.js"></script>
+    <script src="pwa.js"></script>
+</body>
+</html>
